@@ -1,0 +1,29 @@
+<launch>
+  <arg name="ns_left" default="left" />
+  <arg name="ns_right" default="right" />
+  <arg name="left_camera" default="1" />
+  <arg name="right_camera" default="2" />
+
+
+  <param name="ns_left" value="$(arg ns_left)"/>
+  <param name="ns_right" value="$(arg ns_right)"/>
+
+
+  <node pkg="camera_info" type="camera_info.py" name="camera_info" output="screen" ns="$(arg ns_left)" args="$(find camera_info)/etc/left.yaml" />
+  <!-- <node pkg="camera_info" type="camera_info.py" name="camera_info" output="screen" ns="$(arg ns_right)" args="$(find camera_info)/etc/right.yaml" /> -->
+
+  <node pkg="cv_camera" type="cv_camera_node" output="screen" name="left">
+    <param name="device_id" value="$(arg left_camera)"/>
+  </node>
+
+  <node pkg="cv_camera" type="cv_camera_node" output="screen" name="right">
+    <param name="device_id" value="$(arg right_camera)"/>
+  </node>
+
+  <node pkg="stereo_image_proc" type="stereo_image_proc" name="stereo_image_proc" output="screen">
+    <param name="approximate_sync" value="true"/>
+    <param name="queue_size" value="1"/>
+
+
+  </node>
+</launch>
